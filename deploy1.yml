@@ -1,0 +1,20 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: web-deploy
+    labels:
+        app: main
+spec:
+    selector:
+        matchLabels:
+            project: proj
+    template:
+        metadata:
+            labels:
+                project: proj
+        spec:
+            containers:
+                - name: proj-web-deploy
+                  image: adv4000/k8sphp:version1
+                  ports:
+                    - containerPort: 80

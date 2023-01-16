@@ -1,0 +1,45 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: web-deploy-autoscaling
+    labels:
+        app: main
+        env: prod
+        owner: Artem
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            project: proj3
+    template:
+        metadata:
+            labels:
+                project: proj3
+        spec:
+            containers:
+                - name: proj3-web-deploy
+                  image: adv4000/k8sphp:version2
+                  ports:
+                    - containerPort: 80
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+    name: my-autoscaling
+spec:
+    scaleTargetRef:
+        apiVersion: autoscaling/v2beta1
+        kind: Deployment
+        name: web-deployment-autoscaling
+    minReplicas: 2
+    maxReplicas: 6
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80    

@@ -1,0 +1,21 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Release.Name }}-deployment
+    labels:
+        app: {{ .Release.Name }}-deployment
+spec:
+    replicas: {{ .Values.replicaCount }} # меняем число реплик на переменную replicaCount из файла Values.yml
+    selector:
+        matchLabels:
+            project: {{ .Release.Name }}
+    template:
+        metadata:
+            labels:
+                project: {{ .Release.Name }}
+        spec:
+            containers:
+                - name: {{ .Release.Name }}
+                  image: {{ .Values.container.image }}    # аналогично меняем на переменную
+                  ports:
+                    - containerPort: 80

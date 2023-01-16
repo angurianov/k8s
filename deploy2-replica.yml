@@ -1,0 +1,23 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: web-deploy-replicas
+    labels:
+        app: main
+        env: prod
+        owner: Artem
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            project: proj2
+    template:
+        metadata:
+            labels:
+                project: proj2
+        spec:
+            containers:
+                - name: proj2-web-deploy
+                  image: adv4000/k8sphp:version2
+                  ports:
+                    - containerPort: 80

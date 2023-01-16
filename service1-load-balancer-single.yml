@@ -1,0 +1,41 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: web-deploy
+    labels:
+        app: main
+        env: prod
+        owner: Artem
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            project: proj1
+    template:
+        metadata:
+            labels:
+                project: proj1      #Service will look for those PODS labels!
+        spec:
+            containers:
+                - name: proj1-web-deploy
+                  image: adv4000/k8sphp:latest
+                  ports:
+                    - containerPort: 80
+                    
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: single-pod-service
+    labels:
+        env: prod
+        owner: Artem
+spec:
+    selector:
+        project: proj1      # Selecting PODS with those Labels
+    ports:
+        - name: app-listener
+          protocol: TCP
+          port: 80           # Port on Load Balancer
+          targetPort: 80     # Port on POD
+    type: LoadBalancer      # Type of Service
